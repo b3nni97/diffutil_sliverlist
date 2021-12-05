@@ -12,7 +12,7 @@ class DiffUtilSliverList<T> extends StatefulWidget {
   final List<T> items;
 
   /// builder that renders a single item (without animation)
-  final Widget Function(BuildContext, T) builder;
+  final Widget Function(BuildContext, T, int index) builder;
 
   /// builder that renders the insertion animation
   final AnimatedDiffUtilWidgetBuilder insertAnimationBuilder;
@@ -71,7 +71,7 @@ class DiffUtilSliverList<T> extends StatefulWidget {
     }
     return DiffUtilSliverList<Widget>(
       items: children,
-      builder: (context, widget) => widget,
+      builder: (context, widget, index) => widget,
       insertAnimationBuilder: insertAnimationBuilder,
       removeAnimationBuilder: removeAnimationBuilder,
       insertAnimationDuration: insertAnimationDuration,
@@ -122,7 +122,7 @@ class _DiffUtilSliverListState<T> extends State<DiffUtilSliverList<T>> {
       itemBuilder: (context, index, animation) => widget.insertAnimationBuilder(
         context,
         animation,
-        widget.builder(context, widget.items[index]),
+        widget.builder(context, widget.items[index], index),
       ),
     );
   }
@@ -153,7 +153,7 @@ class _DiffUtilSliverListState<T> extends State<DiffUtilSliverList<T>> {
       listKey.currentState!.removeItem(
           position,
           (context, animation) => widget.removeAnimationBuilder(
-              context, animation, widget.builder(context, oldItem)),
+              context, animation, widget.builder(context, oldItem, position)),
           duration: widget.removeAnimationDuration);
     }
     tempList.removeRange(position, position + count);
